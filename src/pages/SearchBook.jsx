@@ -30,8 +30,12 @@ const SearchBook = () => {
     try {
       await bookVehicle({ ...form, vehicleId, customerId: "CUSTOMER123" });
       setMessage("✅ Booking successful!");
+      alert("✅ Booking successful!")
       // Refresh list after booking to hide booked vehicles
       handleSearch({ preventDefault: () => {} });
+          // Clear message after 3 seconds
+    setTimeout(() => setMessage(""), 3000);
+
     } catch (err) {
       setMessage(
         "❌ Booking failed: " + (err.response?.data?.message || "Something went wrong")
