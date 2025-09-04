@@ -1,24 +1,45 @@
-import logo from './logo.svg';
-import './App.css';
+
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import AddVehicle from "./pages/AddVehicle";
+import SearchBook from "./pages/SearchBook";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <nav className="bg-blue-600 text-white px-6 py-4 shadow-md">
+        <div className="max-w-6xl mx-auto flex justify-between items-center">
+          <h1 className="text-xl font-bold">FleetLink</h1>
+          <div className="space-x-6">
+            <Link
+              to="/"
+              className="hover:text-gray-200 font-medium transition"
+            >
+              Add Vehicle
+            </Link>
+            <Link
+              to="/search"
+              className="hover:text-gray-200 font-medium transition"
+            >
+              Search & Book
+            </Link>
+          </div>
+        </div>
+      </nav>
+
+      {/* Pages */}
+      <div className="min-h-screen bg-gray-100 p-6">
+        <Routes>
+          <Route path="/" element={<AddVehicle />} />
+          <Route path="/search" element={<SearchBook />} />
+        </Routes>
+      </div>
+    </Router>
+
+  
+    
+
+
+
   );
 }
 
