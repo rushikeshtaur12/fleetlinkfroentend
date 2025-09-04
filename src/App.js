@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, NavLink } from "react-router-dom";
 import AddVehicle from "./pages/AddVehicle";
 import SearchBook from "./pages/SearchBook";
+import ViewBookings from "./components/ViewBookings";
 
 function App() {
   return (
@@ -30,14 +31,25 @@ function App() {
             >
               Search & Book
             </NavLink>
+            <NavLink
+              to="/view-bookings"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-gray-200 font-semibold border-b-2 border-white pb-1 transition"
+                  : "hover:text-gray-200 font-medium transition"
+              }
+            >
+              View Bookings
+            </NavLink>
           </div>
         </div>
       </nav>
 
-      <div className="flex justify-center items-start min-h-screen p-6 bg-gray-100">
+      <div className="flex justify-center items-start min-h-screen p-6 bg-gray-100 w-full">
         <Routes>
           <Route path="/" element={<AddVehicle />} />
           <Route path="/search" element={<SearchBook />} />
+          <Route path="/view-bookings" element={<ViewBookings />} />
         </Routes>
       </div>
     </Router>
