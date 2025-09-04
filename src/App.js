@@ -1,45 +1,46 @@
-
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, NavLink } from "react-router-dom";
 import AddVehicle from "./pages/AddVehicle";
 import SearchBook from "./pages/SearchBook";
 
 function App() {
   return (
     <Router>
-      <nav className="bg-blue-600 text-white px-6 py-4 shadow-md">
+      <nav className="bg-blue-600 text-white px-6 py-4 shadow-md sticky top-0 z-50">
         <div className="max-w-6xl mx-auto flex justify-between items-center">
-          <h1 className="text-xl font-bold">FleetLink</h1>
+          <h1 className="text-2xl font-bold tracking-wide">FleetLink</h1>
           <div className="space-x-6">
-            <Link
+            <NavLink
               to="/"
-              className="hover:text-gray-200 font-medium transition"
+              end
+              className={({ isActive }) =>
+                isActive
+                  ? "text-gray-200 font-semibold border-b-2 border-white pb-1 transition"
+                  : "hover:text-gray-200 font-medium transition"
+              }
             >
               Add Vehicle
-            </Link>
-            <Link
+            </NavLink>
+            <NavLink
               to="/search"
-              className="hover:text-gray-200 font-medium transition"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-gray-200 font-semibold border-b-2 border-white pb-1 transition"
+                  : "hover:text-gray-200 font-medium transition"
+              }
             >
               Search & Book
-            </Link>
+            </NavLink>
           </div>
         </div>
       </nav>
 
-      {/* Pages */}
-      <div className="min-h-screen bg-gray-100 p-6">
+      <div className="flex justify-center items-start min-h-screen p-6 bg-gray-100">
         <Routes>
           <Route path="/" element={<AddVehicle />} />
           <Route path="/search" element={<SearchBook />} />
         </Routes>
       </div>
     </Router>
-
-  
-    
-
-
-
   );
 }
 

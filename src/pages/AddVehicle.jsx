@@ -23,7 +23,7 @@ const AddVehicle = () => {
 
   return (
     <div className="max-w-lg mx-auto mt-10 p-6 bg-white rounded-2xl shadow-lg">
-      <h2 className="text-2xl font-bold text-gray-800 mb-6">Add Vehicle</h2>
+      <h2 className="text-2xl font-bold mb-6">Add Vehicle</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <input
           name="name"
@@ -53,14 +53,12 @@ const AddVehicle = () => {
         />
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition"
+          className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition"
         >
           Add Vehicle
         </button>
       </form>
-      {message && (
-        <p className="mt-4 text-center font-medium text-gray-700">{message}</p>
-      )}
+      {message && <p className="mt-4 text-center">{message}</p>}
     </div>
   );
 };

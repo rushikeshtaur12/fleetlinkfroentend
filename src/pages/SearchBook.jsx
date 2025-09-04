@@ -22,35 +22,26 @@ const SearchBook = () => {
       setVehicles(data);
       setMessage(data.length ? "" : "No vehicles available for given criteria.");
     } catch (err) {
-      setMessage(
-        "❌ Error: " + (err.response?.data?.message || "Something went wrong")
-      );
+      setMessage("❌ Error: " + (err.response?.data?.message || "Something went wrong"));
     }
   };
 
   const handleBook = async (vehicleId) => {
     try {
-      await bookVehicle({
-        vehicleId,
-        fromPincode: form.fromPincode,
-        toPincode: form.toPincode,
-        startTime: form.startTime,
-        customerId: "CUSTOMER123", // hardcoded for demo
-      });
+      await bookVehicle({ ...form, vehicleId, customerId: "CUSTOMER123" });
       setMessage("✅ Booking successful!");
+      // Refresh list after booking to hide booked vehicles
+      handleSearch({ preventDefault: () => {} });
     } catch (err) {
       setMessage(
-        "❌ Booking failed: " +
-          (err.response?.data?.message || "Something went wrong")
+        "❌ Booking failed: " + (err.response?.data?.message || "Something went wrong")
       );
     }
   };
 
   return (
     <div className="max-w-2xl mx-auto mt-10 p-6 bg-white rounded-2xl shadow-lg">
-      <h2 className="text-2xl font-bold text-gray-800 mb-6">
-        Search & Book Vehicle
-      </h2>
+      <h2 className="text-2xl font-bold mb-6">Search & Book Vehicle</h2>
       <form onSubmit={handleSearch} className="space-y-4">
         <input
           type="number"
@@ -87,15 +78,13 @@ const SearchBook = () => {
         />
         <button
           type="submit"
-          className="w-full bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition"
+          className="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition"
         >
           Search Availability
         </button>
       </form>
 
-      {message && (
-        <p className="mt-4 text-center font-medium text-gray-700">{message}</p>
-      )}
+      {message && <p className="mt-4 text-center">{message}</p>}
 
       <VehicleList vehicles={vehicles} onBook={handleBook} />
     </div>

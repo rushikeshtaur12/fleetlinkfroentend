@@ -4,30 +4,29 @@ const VehicleList = ({ vehicles, onBook }) => {
   if (!vehicles.length) return null;
 
   return (
-    <div className="mt-6 space-y-4">
+    <ul className="mt-6 space-y-4">
       {vehicles.map((v) => (
-        <div
+        <li
           key={v._id}
-          className="p-4 border rounded-xl shadow-sm bg-gray-50 flex justify-between items-center"
+          className="p-4 border rounded-lg flex justify-between items-center"
         >
           <div>
-            <h3 className="text-lg font-semibold text-gray-800">{v.name}</h3>
-            <p className="text-sm text-gray-600">
-              Capacity: {v.capacityKg} kg | Tyres: {v.tyres}
-            </p>
-            <p className="text-sm text-gray-600">
-              Ride Duration: {v.estimatedRideDurationHours} hrs
-            </p>
+            <p className="font-semibold">{v.name}</p>
+            <p>Capacity: {v.capacityKg}kg | Tyres: {v.tyres}</p>
+            <p>Estimated Duration: {v.estimatedRideDurationHours}h</p>
+            {v.booked && <p className="text-red-500 font-medium">Booked</p>}
           </div>
-          <button
-            onClick={() => onBook(v._id)}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
-          >
-            Book Now
-          </button>
-        </div>
+          {!v.booked && (
+            <button
+              onClick={() => onBook(v._id)}
+              className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
+            >
+              Book Now
+            </button>
+          )}
+        </li>
       ))}
-    </div>
+    </ul>
   );
 };
 
