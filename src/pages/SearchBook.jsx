@@ -25,24 +25,24 @@ const SearchBook = () => {
       setMessage("❌ Error: " + (err.response?.data?.message || "Something went wrong"));
     }
   };
+  // creating CUSTMER ID dynamic
+const generateCustomerId = () => `CUSTOMER-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+ const handleBook = async (vehicleId) => {
+  try {
+    const customerId = generateCustomerId(); // generate dynamic customer ID
+    await bookVehicle({ ...form, vehicleId, customerId });
+    setMessage("✅ Booking successful!");
 
-  const handleBook = async (vehicleId) => {
-    try {
-      await bookVehicle({ ...form, vehicleId, customerId: "CUSTOMER123" });
-      setMessage("✅ Booking successful!");
-      alert("✅ Booking successful!")
-      // Refresh list after booking to hide booked vehicles
-      handleSearch({ preventDefault: () => {} });
-          // Clear message after 3 seconds
+    // Remove booked vehicle from local list
+    setVehicles((prev) => prev.filter((v) => v._id !== vehicleId));
+
     setTimeout(() => setMessage(""), 3000);
-
-    } catch (err) {
-      setMessage(
-        "❌ Booking failed: " + (err.response?.data?.message || "Something went wrong")
-      );
-    }
-  };
-
+  } catch (err) {
+    setMessage(
+      "❌ Booking failed: " + (err.response?.data?.message || "Something went wrong")
+    );
+  }
+};
   return (
     <div className="max-w-2xl mx-auto mt-10 p-6 bg-white rounded-2xl shadow-lg">
       <h2 className="text-2xl font-bold mb-6">Search & Book Vehicle</h2>

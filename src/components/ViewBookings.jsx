@@ -14,7 +14,7 @@ const ViewBookings = () => {
       setBookings(res.data);
       setMessage("");
     } catch (err) {
-      setMessage(err.response?.data?.message || "Error fetching bookings");
+      setMessage(err.response?.data?.message || "");  //Error fetching data
     } finally {
       setLoading(false);
     }
