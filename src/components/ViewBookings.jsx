@@ -5,6 +5,7 @@ const ViewBookings = () => {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const [filter, setFilter] = useState("all"); // all, booked, cancelled
 
   const fetchBookings = async () => {
     setLoading(true);
@@ -29,7 +30,7 @@ const ViewBookings = () => {
     try {
       const res = await cancelBooking(id);
 
-      // Show backend message (either success or already cancelled)
+      // Show backend message
       setMessage(res.data.message);
 
       // Update booking list locally
@@ -43,17 +44,41 @@ const ViewBookings = () => {
     }
   };
 
+  // Filter bookings based on selected status
+  const filteredBookings = bookings.filter((b) => {
+    if (filter === "all") return true;
+    if (filter === "booked") return !b.isCancelled;
+    if (filter === "cancelled") return b.isCancelled;
+    return true;
+  });
+
   return (
     <div className="bg-white p-6 rounded shadow-md w-full max-w-3xl">
       <h2 className="text-xl font-semibold mb-4">All Bookings</h2>
+
+      {/* Filter Dropdown */}
+      <div className="mb-4">
+        <label className="mr-2 font-medium">Filter by Status:</label>
+        <select
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+          className="border p-1 rounded"
+        >
+          <option value="all">All</option>
+          <option value="booked">Booked</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
+      </div>
+
       {message && <p className="text-green-600 mb-3">{message}</p>}
+
       {loading ? (
         <p>Loading bookings...</p>
-      ) : bookings.length === 0 ? (
+      ) : filteredBookings.length === 0 ? (
         <p>No bookings found.</p>
       ) : (
         <ul className="space-y-3">
-          {bookings.map((b) => (
+          {filteredBookings.map((b) => (
             <li
               key={b._id}
               className={`border p-3 rounded ${b.isCancelled ? "bg-red-100" : ""}`}
