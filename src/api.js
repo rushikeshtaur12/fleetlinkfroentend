@@ -12,8 +12,11 @@ export const getAvailableVehicles = (params) =>
 // -------------------- Booking APIs --------------------
 export const bookVehicle = (data) => API.post("/bookings", data);
 
-// -------------------- Manage Booking APIs --------------------
+// -------------------- view Booking APIs --------------------
 export const getAllBookings = () => API.get("/manage-bookings");
-export const cancelBooking = (id) => API.delete(`/manage-bookings/${id}`);
+
+// Cancel booking (mark as cancelled)
+export const cancelBooking = (id) => API.patch(`/manage-bookings/${id}/cancel`);
+
 
 export default API;
