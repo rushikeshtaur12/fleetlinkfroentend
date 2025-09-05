@@ -1,32 +1,45 @@
 import React from "react";
 
-const VehicleList = ({ vehicles, onBook }) => {
-  if (!vehicles.length) return null;
+const VehicleList = ({ vehicles = [], onBook }) => {
+  // If vehicles is not array, normalize it
+  if (!Array.isArray(vehicles)) {
+    return <p className="mt-4 text-red-600">⚠️ Invalid vehicles data</p>;
+  }
+
+  // if (vehicles.length === 0) {
+  //   return <p className="mt-4 text-gray-600">No vehicles available</p>;
+  // }
 
   return (
-    <ul className="mt-6 space-y-4">
+    <div className="mt-6 space-y-4">
       {vehicles.map((v) => (
-        <li
+        <div
           key={v._id}
-          className="p-4 border rounded-lg flex justify-between items-center"
+          className="border rounded-md p-4 shadow-sm flex items-center justify-between bg-gray-50"
         >
           <div>
-            <p className="font-semibold">{v.name}</p>
-            <p>Capacity: {v.capacityKg}kg | Tyres: {v.tyres}</p>
-            <p>Estimated Duration: {v.estimatedRideDurationHours}h</p>
-            {v.booked && <p className="text-red-500 font-medium">Booked</p>}
+            <h3 className="text-lg font-semibold text-gray-800">
+              {v.name || "Unnamed Vehicle"}
+            </h3>
+            <p className="text-sm text-gray-600">
+              Capacity: {v.capacityKg} kg
+            </p>
+            {v.estimatedRideDurationHours && (
+              <p className="text-xs text-gray-500">
+                Est. Duration: {v.estimatedRideDurationHours} hrs
+              </p>
+            )}
           </div>
-          {!v.booked && (
-            <button
-              onClick={() => onBook(v._id)}
-              className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
-            >
-              Book Now
-            </button>
-          )}
-        </li>
+
+          <button
+            onClick={() => onBook(v._id)}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+          >
+            Book
+          </button>
+        </div>
       ))}
-    </ul>
+    </div>
   );
 };
 

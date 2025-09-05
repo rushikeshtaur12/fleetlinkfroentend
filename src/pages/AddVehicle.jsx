@@ -1,66 +1,34 @@
 import React, { useState } from "react";
 import { addVehicle } from "../api";
 
-const AddVehicle = () => {
+export default function AddVehicle() {
   const [form, setForm] = useState({ name: "", capacityKg: "", tyres: "" });
   const [message, setMessage] = useState("");
 
-  const handleChange = (e) =>
-    setForm({ ...form, [e.target.name]: e.target.value });
+  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setMessage("");
     try {
-      await addVehicle(form);
-      setMessage("✅ Vehicle added successfully!");
+      await addVehicle({ name: form.name, capacityKg: Number(form.capacityKg), tyres: Number(form.tyres) });
+      setMessage("✅ Vehicle added successfully.");
       setForm({ name: "", capacityKg: "", tyres: "" });
     } catch (err) {
-      setMessage(
-        "❌ Error: " + (err.response?.data?.message || "Something went wrong")
-      );
+      setMessage("❌ " + (err.response?.data?.message || "Failed to add vehicle"));
     }
   };
 
   return (
-    <div className="max-w-lg mx-auto mt-10 p-6 bg-white rounded-2xl shadow-lg">
-      <h2 className="text-2xl font-bold mb-6">Add Vehicle</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          name="name"
-          placeholder="Vehicle Name"
-          value={form.name}
-          onChange={handleChange}
-          required
-          className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
-        />
-        <input
-          type="number"
-          name="capacityKg"
-          placeholder="Capacity (kg)"
-          value={form.capacityKg}
-          onChange={handleChange}
-          required
-          className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
-        />
-        <input
-          type="number"
-          name="tyres"
-          placeholder="Tyres"
-          value={form.tyres}
-          onChange={handleChange}
-          required
-          className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
-        />
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition"
-        >
-          Add Vehicle
-        </button>
+    <div className="bg-white p-6 rounded-md shadow-md max-w-md mx-auto">
+      <h2 className="text-xl font-semibold mb-4">Add Vehicle</h2>
+      {message && <p className="mb-3">{message}</p>}
+      <form onSubmit={handleSubmit} className="space-y-3">
+        <input name="name" placeholder="Name" value={form.name} onChange={handleChange} required className="w-full p-2 border rounded" />
+        <input name="capacityKg" type="number" placeholder="Capacity (Kg)" value={form.capacityKg} onChange={handleChange} required className="w-full p-2 border rounded" />
+        <input name="tyres" type="number" placeholder="Tyres" value={form.tyres} onChange={handleChange} required className="w-full p-2 border rounded" />
+        <button type="submit" className="w-full bg-blue-600 text-white p-2 rounded">Add Vehicle</button>
       </form>
-      {message && <p className="mt-4 text-center">{message}</p>}
     </div>
   );
-};
-
-export default AddVehicle;
+}

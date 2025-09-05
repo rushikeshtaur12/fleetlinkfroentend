@@ -1,11 +1,11 @@
-import { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { getAllBookings, cancelBooking } from "../api";
 
 const ViewBookings = () => {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
-  const [filter, setFilter] = useState("all"); // all, booked, cancelled
+  const [filter, setFilter] = useState("all"); // all | booked | cancelled
 
   const fetchBookings = async () => {
     setLoading(true);
@@ -14,7 +14,7 @@ const ViewBookings = () => {
       setBookings(res.data);
       setMessage("");
     } catch (err) {
-      setMessage(err.response?.data?.message || "");  //Error fetching data
+      setMessage(err.response?.data?.message || "Error fetching bookings");
     } finally {
       setLoading(false);
     }
@@ -26,26 +26,17 @@ const ViewBookings = () => {
 
   const handleCancel = async (id) => {
     if (!window.confirm("Are you sure you want to cancel this booking?")) return;
-
     try {
       const res = await cancelBooking(id);
-
-      // Show backend message
-      setMessage(res.data.message);
-
-      // Update booking list locally
-      setBookings((prev) =>
-        prev.map((b) =>
-          b._id === id ? { ...b, isCancelled: true } : b
-        )
-      );
+      setMessage(res.data.message || "Cancelled");
+      // update locally
+      setBookings((prev) => prev.map(b => b._id === id ? { ...b, isCancelled: true } : b));
     } catch (err) {
       setMessage(err.response?.data?.message || "Failed to cancel booking");
     }
   };
 
-  // Filter bookings based on selected status
-  const filteredBookings = bookings.filter((b) => {
+  const filtered = bookings.filter(b => {
     if (filter === "all") return true;
     if (filter === "booked") return !b.isCancelled;
     if (filter === "cancelled") return b.isCancelled;
@@ -53,36 +44,24 @@ const ViewBookings = () => {
   });
 
   return (
-    <div className="bg-white p-6 rounded shadow-md w-full max-w-3xl">
+    <div className="bg-white p-6 rounded-md shadow-md max-w-3xl mx-auto">
       <h2 className="text-xl font-semibold mb-4">All Bookings</h2>
 
-      {/* Filter Dropdown */}
       <div className="mb-4">
-        <label className="mr-2 font-medium">Filter by Status:</label>
-        <select
-          value={filter}
-          onChange={(e) => setFilter(e.target.value)}
-          className="border p-1 rounded"
-        >
+        <label className="mr-2">Filter:</label>
+        <select value={filter} onChange={(e) => setFilter(e.target.value)} className="p-1 border rounded">
           <option value="all">All</option>
           <option value="booked">Booked</option>
           <option value="cancelled">Cancelled</option>
         </select>
+        <button onClick={fetchBookings} className="ml-4 p-1 border rounded">Refresh</button>
       </div>
 
-      {message && <p className="text-green-600 mb-3">{message}</p>}
-
-      {loading ? (
-        <p>Loading bookings...</p>
-      ) : filteredBookings.length === 0 ? (
-        <p>No bookings found.</p>
-      ) : (
+      {message && <p className="mb-3">{message}</p>}
+      {loading ? <p>Loading...</p> : filtered.length === 0 ? <p>No bookings found.</p> : (
         <ul className="space-y-3">
-          {filteredBookings.map((b) => (
-            <li
-              key={b._id}
-              className={`border p-3 rounded ${b.isCancelled ? "bg-red-100" : ""}`}
-            >
+          {filtered.map(b => (
+            <li key={b._id} className={`border p-3 rounded ${b.isCancelled ? "bg-red-50" : ""}`}>
               <p><strong>Vehicle:</strong> {b.vehicleId?.name || "Unknown"}</p>
               <p><strong>From:</strong> {b.fromPincode} <strong>To:</strong> {b.toPincode}</p>
               <p><strong>Start:</strong> {new Date(b.startTime).toLocaleString()}</p>
@@ -90,12 +69,7 @@ const ViewBookings = () => {
               <p><strong>Customer ID:</strong> {b.customerId}</p>
               <p><strong>Status:</strong> {b.isCancelled ? "Cancelled" : "Booked"}</p>
               {!b.isCancelled && (
-                <button
-                  onClick={() => handleCancel(b._id)}
-                  className="mt-2 bg-red-600 text-white py-1 px-3 rounded hover:bg-red-700 transition"
-                >
-                  Cancel Booking
-                </button>
+                <button onClick={() => handleCancel(b._id)} className="mt-2 bg-red-600 text-white px-3 py-1 rounded">Cancel Booking</button>
               )}
             </li>
           ))}
